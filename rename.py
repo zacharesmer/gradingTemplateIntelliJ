@@ -7,13 +7,19 @@ def get_bb_name(f):
     new = new.split("_")[-1] 
     return new
 
-extension = ".zip"
+zip_extension = ".zip"
+txt_extension = ".txt"
 for f in os.listdir():
     # rename all folders
     if os.path.isdir(f):
         new = get_bb_name(f)
     # and all zip files
-    elif f.endswith(extension):
-        new = get_bb_name(f) + extension
+    elif f.endswith(zip_extension):
+        new = get_bb_name(f) + zip_extension
+    # and text files
+    elif f.endswith(txt_extension):
+        new = get_bb_name(f) + txt_extension
+    else:
+        break
     os.rename(f, new)
 

@@ -13,6 +13,9 @@ unzip "$1" -d "$submissionDir/$assignmentDir"
 # move into that directory
 cd "$submissionDir/$assignmentDir" || exit
 
+# rename the folders and zip files to something more manageable
+python ../../rename.py
+
 # handle cases where a student submitted a zip file
 for f in *.zip; do
    # make a folder named the same thing but without the .zip
@@ -21,7 +24,7 @@ for f in *.zip; do
    # unzip their work into it
    unzip "$f" -d "$newDir"
    # match the comments file (assumption: students will not submit something with _ in the title)
-   mv "${f%_*}".txt "$newDir"/comments.txt
+   mv "${f%.*}".txt "$newDir"/comments.txt
 done
 
 # # handle cases where a student submitted a .java file
@@ -35,6 +38,3 @@ done
 #    # move the comments file into that dir
 #    mv "${f%_*}.txt" "$newDir/comments.txt"
 # done
-
-# rename the folders and zip files to something more manageable
-python ../../rename.py
