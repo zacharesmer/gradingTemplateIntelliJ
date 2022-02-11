@@ -23,7 +23,7 @@ for f in *.zip; do
    mkdir "$newDir"
    # unzip their work into it
    unzip "$f" -d "$newDir"
-   # match the comments file (assumption: students will not submit something with _ in the title)
+   # match the comments file 
    mv "${f%.*}".txt "$newDir"/comments.txt
 done
 
