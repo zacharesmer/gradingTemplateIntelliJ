@@ -14,7 +14,7 @@ unzip "$1" -d "$submissionDir/$assignmentDir"
 cd "$submissionDir/$assignmentDir" || exit
 
 # rename the folders and zip files to something more manageable
-python ../../rename.py
+python3 ../../rename.py
 
 # handle cases where a student submitted a zip file
 for f in *.zip; do
