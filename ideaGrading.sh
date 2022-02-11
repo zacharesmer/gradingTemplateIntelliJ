@@ -34,26 +34,34 @@ show_submission(){
 search_name(){
   # enter a search string
   read searchString;
-  # echo "You searched for $searchString"
+  printf "\n"
+
   # find all folders matching that student's name, aka *"$name"*
   # and store them in an array
   IFS=$'\n' # this is a questionable hack to make an array from the output of find
   paths=($(find "$submissionDir" -maxdepth 2 -name "*$searchString*" -type d))
   unset IFS
-  printf "\n"
-  for i in "${!paths[@]}"; do
-    # show all found files with their array index to choose from
-    echo "$i" "${paths[i]##*/}";
-  done;
+
   # if no files found print a message
   if [[ 0 -eq ${#paths[@]} ]]; then
     echo "No matches found."
+    # and exit the search
     return
   fi
+
+  # show all found files with their array index to choose from
+  for i in "${!paths[@]}"; do
+    echo "$i" "${paths[i]##*/}";
+  done;
   printf "\n%s\n" "q Back to main menu"
+
   while read whichFile; do
+    # if selection is q, quit to menu
     if [[ "$whichFile" == "q" ]]; then
       break
+    # if selection is not an integer, ignore it and prompt again
+    elif [[ ! "$whichFile" =~ ^[0-9]+$ ]]; then
+      echo "Enter a number to pick a student or q to return to the main menu"
     # check if choice is within bounds of the array and show that file
     elif [[ "$whichFile" -lt ${#paths[@]} ]]; then
       show_submission "${paths[whichFile]}/"
