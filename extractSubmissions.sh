@@ -17,6 +17,8 @@ cd "$submissionDir/$assignmentDir" || exit
 for f in *; do
   newName="${f%%_attempt*}"
   newName="${newName##*_}"
+  newName="${newName:1}"
+  newName="${newName//[0-9]/}"
   if [[ "${f##*.}" == "zip" ]]; then
     newName="$newName.zip"
   elif [[ "${f##*.}" == "txt" ]]; then
