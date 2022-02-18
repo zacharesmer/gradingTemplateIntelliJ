@@ -5,7 +5,7 @@ filename="Main.java"
 
 
 # if it doesn't exist yet, make the directory for done files
-[[ ! -d "$submissionDir" ]] && mkdir "$submissionDir";
+[[ -d "$submissionDir" ]] || mkdir "$submissionDir";
 # cd "$submissionDir" || exit
 
 # unzip the big file with all the submissions into a directory
@@ -14,7 +14,21 @@ unzip "$1" -d "$submissionDir/$assignmentDir"
 cd "$submissionDir/$assignmentDir" || exit
 
 # rename the folders and zip files to something more manageable
-python3 ../../rename.py
+for f in *; do
+  newName="${f%%_attempt*}"
+  newName="${newName##*_}"
+  if [[ "${f##*.}" == "zip" ]]; then
+    newName="$newName.zip"
+  elif [[ "${f##*.}" == "txt" ]]; then
+    newName="$newName.txt"
+  elif [[ -d "$f" ]]; then
+    # nop
+    newName="$newName"
+  else
+    continue;
+  fi
+  mv "$f" "$newName"
+done
 
 # handle cases where a student submitted a zip file
 for f in *.zip; do
@@ -23,12 +37,11 @@ for f in *.zip; do
    mkdir "$newDir"
    # unzip their work into it
    unzip "$f" -d "$newDir"
-   # match the comments file 
+   # match the comments file and rename it to comments.txt in the student's directory
    mv "${f%.*}".txt "$newDir"/comments.txt
 done
 
 # # handle cases where a student submitted a .java file
-# # Commented out for now because it hasn't been necessary
 # for f in *.java; do
 #    # make a folder named the same thing but without the .java
 #    newDir="${f%.*}"
@@ -38,3 +51,4 @@ done
 #    # move the comments file into that dir
 #    mv "${f%_*}.txt" "$newDir/comments.txt"
 # done
+

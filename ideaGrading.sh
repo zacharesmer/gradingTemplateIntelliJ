@@ -64,7 +64,9 @@ search_name(){
       echo "Enter a number to pick a student or q to return to the main menu"
     # check if choice is within bounds of the array and show that file
     elif [[ "$whichFile" -lt ${#paths[@]} ]]; then
-      show_submission "${paths[whichFile]}/"
+      filePath="${paths[whichFile]}/"
+      show_submission "$filePath"
+      mv "$filePath" "$doneDir"
       break
     else
       echo "Enter a number to pick a student or q to return to the main menu"
@@ -73,6 +75,10 @@ search_name(){
 }
 
 for d in "$startDir"*/; do
+  # check that "$d" actually exists first
+  if [[ ! -d "$d" ]]; then
+    continue
+  fi
   show_submission "$d";
   # move that submission into the done folder
   mv "$d" "$doneDir";
@@ -88,6 +94,7 @@ for d in "$startDir"*/; do
     fi
     if [[ "$doNext" == "search" || "$doNext" == "s" ]]; then
       search_name
+
     fi
     echo "$prompt"
   done
