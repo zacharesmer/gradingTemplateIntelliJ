@@ -23,6 +23,7 @@ show_submission(){
   # print a message if the student didn't submit a correctly named file
   [[ $(find "$d" -name $filename -type f) ]] || {
     echo "could not find file $filename in $d"
+    echo "File not found in $d" > "$gradingDir$filename"
     return;
   }
   # otherwise find the correctly named file
