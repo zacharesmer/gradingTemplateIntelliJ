@@ -75,19 +75,25 @@ search_name(){
   done
 }
 
-for d in "$startDir"*/; do
-  # check that "$d" actually exists first
-  if [[ ! -d "$d" ]]; then
-    continue
-  fi
-  show_submission "$d";
-  # move that submission into the done folder
-  mv "$d" "$doneDir";
 
+while true; do
   # wait for the user to enter next, exit, or search for a student
   echo "$prompt"
   while read doNext;  do 
     if [[ "$doNext" == "next" || "$doNext" == "n" ]]; then
+      # check if there are any more assignment folders available
+      ls -d $startDir*/ &> /dev/null
+      if [[ $? -ne 0 ]]; then
+        # if not, print a message and restart the loop
+        echo "No more assignments left to grade; search for a previous assignment"
+        continue
+      fi
+      # get the first assignment in alphabetical order
+      assignmentArray=($(ls -d $startDir*/))
+      d="$assignmentArray"
+      show_submission "$d";
+      # move that submission into the done folder
+      mv "$d" "$doneDir";
       break;
     fi
     if [[ "$doNext" == "exit" || "$doNext" == "q" ]]; then
