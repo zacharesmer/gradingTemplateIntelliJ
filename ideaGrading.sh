@@ -1,6 +1,6 @@
 #!/bin/bash
 
-filename="Main.java"
+filenames= ("Main.java")
 submissionDir="Submissions"
 startDir="$submissionDir/allAssignments/"
 doneDir="$submissionDir/doneGrading/"
@@ -20,16 +20,18 @@ show_submission(){
   echo "$divider"
   # print the comments file
   cat "$d"comments.txt
-  # print a message if the student didn't submit a correctly named file
-  [[ $(find "$d" -name $filename -type f) ]] || {
-    echo "could not find file $filename in $d"
-    echo "File not found in $d" > "$gradingDir$filename"
-    return;
-  }
-  # otherwise find the correctly named file
-  f=$(find "$d" -name "$filename" -type f);
-  # copy the file into the idea project
-  cp "$f" "$gradingDir";
+  for filename in "${filenames[@]}"; do
+    # print a message if the student didn't submit a correctly named file
+    [[ $(find "$d" -name $filename -type f) ]] || {
+      echo "could not find file $filename in $d"
+      echo "File not found in $d" > "$gradingDir$filename"
+      return;
+    }
+    # otherwise find the correctly named file
+    f=$(find "$d" -name "$filename" -type f);
+    # copy the file into the idea project
+    cp "$f" "$gradingDir";
+  done
 }
 
 search_name(){
