@@ -1,10 +1,13 @@
 #!/bin/bash
 
 filenames= ("Main.java")
+testFilenames=("MainTest.java")
 submissionDir="Submissions"
 startDir="$submissionDir/allAssignments/"
 doneDir="$submissionDir/doneGrading/"
 gradingDir="grading/src/main/java/com/example/"
+testGradingDir="grading/src/test/java/com/example/"
+
 
 prompt="type next (n) to go to the next student, exit (q) to stop grading, or search (s) to search for a student's last name"
 divider="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -20,6 +23,7 @@ show_submission(){
   echo "$divider"
   # print the comments file
   cat "$d"comments.txt
+  # Copy main project files into the grading directory
   for filename in "${filenames[@]}"; do
     # print a message if the student didn't submit a correctly named file
     [[ $(find "$d" -name $filename -type f) ]] || {
@@ -31,6 +35,20 @@ show_submission(){
     f=$(find "$d" -name "$filename" -type f);
     # copy the file into the idea project
     cp "$f" "$gradingDir";
+  done
+
+  # Copy test files into the test directory
+  for filename in "${testFilenames[@]}"; do
+    # print a message if the student didn't submit a correctly named file
+    [[ $(find "$d" -name $filename -type f) ]] || {
+      echo "could not find file $filename in $d"
+      echo "File not found in $d" > "$testGradingDir$filename"
+      return;
+    }
+    # otherwise find the correctly named file
+    f=$(find "$d" -name "$filename" -type f);
+    # copy the file into the idea project
+    cp "$f" "$testGradingDir";
   done
 }
 
